@@ -90,16 +90,54 @@ namespace kozuti_ellenorzes
             string rendszam = Console.ReadLine();
             for (int i = 0; i < iterator; i++)
             {
+                if ((rendszam == "") || (rendszam.Length != 7))    
+                {
+                    Console.WriteLine("Nem megfelelő formátum.");
+                    break;
+                }
                 bool jo = true;
                 for (int j = 0; j < 7; j++)
                 {
-                    string mostanirendszam = adattomb[i][3]; 
+                    string mostanirendszam = adattomb[i][3];
                     if (rendszam[j] != '*' && rendszam[j] != mostanirendszam[j])
                         jo = false;
                 }
                 if (jo)
                     Console.WriteLine(adattomb[i][3]);
             }
+            #endregion
+            #region ellenorzes
+            Console.WriteLine("7. feladat:");
+            int[] ellenorzottek = new int[iterator];
+            ellenorzottek[0] = 0;
+            int auto_kezd = 0;
+            bool ellenorzott = false;
+            int ora_kezd = 0;
+            int ora_veg = 0;
+            int iterator2 = 1;
+            for (int i = 1; i < iterator; i++)
+            {
+                if (!ellenorzott)
+                {
+                    ora_kezd = Convert.ToInt16(adattomb[auto_kezd][0]) * 3600 + Convert.ToInt16(adattomb[auto_kezd][1]) * 60 + Convert.ToInt16(adattomb[auto_kezd][2]);
+                    ellenorzott = true;
+                }
+                ora_veg = Convert.ToInt16(adattomb[i][0]) * 3600 + Convert.ToInt16(adattomb[i][1]) * 60 + Convert.ToInt16(adattomb[i][2]);
+                if((ora_kezd + 300) <= ora_veg)
+                {
+                    ellenorzottek[iterator2] = i;
+                    auto_kezd = i;
+                    ellenorzott = false;
+                    iterator2++;
+                }
+            }
+            StreamWriter kiiro = new StreamWriter("vizsgalt.txt");
+            for (int i = 0; i < iterator2; i++)
+            {
+
+                kiiro.WriteLine("{0} {1} {2} {3}", adattomb[ellenorzottek[i]][0], adattomb[ellenorzottek[i]][1], adattomb[ellenorzottek[i]][2], adattomb[ellenorzottek[i]][3]);
+            }
+            kiiro.Close();
             #endregion
             Console.ReadLine();
 
